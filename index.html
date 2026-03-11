@@ -747,7 +747,7 @@
       <p class="footer-note">Built with passion for autonomous driving research</p>
       <div class="visitor-stats">
         <div class="visitor-count">
-          <span class="visitor-label">Total Visitors:</span>
+          <span class="visitor-label">Total Visits:</span>
           <span id="visitorCount" class="visitor-number">0</span>
         </div>
         <div class="visitor-note">Thank you for visiting!</div>
@@ -936,76 +936,39 @@
     `;
     document.head.appendChild(style);
 
-    // Visitor Counter
-    function updateVisitorCount() {
+    // Visit Counter
+    function updateVisitCount() {
       const visitorCountElement = document.getElementById('visitorCount');
       if (!visitorCountElement) return;
 
-      // Use localStorage to track unique visitors
-      const storageKey = 'amazingroad_visitor_count';
-      const lastVisitKey = 'amazingroad_last_visit';
+      // Use localStorage to track visit counts
+      const storageKey = 'amazingroad_visit_count';
 
-      // Get current timestamp
-      const now = Date.now();
-      const lastVisit = localStorage.getItem(lastVisitKey);
+      // Get current count or initialize to 0
+      let currentCount = parseInt(localStorage.getItem(storageKey) || '0');
 
-      // Check if this is a new visit (more than 24 hours since last visit)
-      const isUniqueVisit = !lastVisit || (now - parseInt(lastVisit)) > 24 * 60 * 60 * 1000;
+      // Increment count for each visit
+      currentCount += 1;
 
-      if (isUniqueVisit) {
-        // Get current count or initialize to 0
-        let currentCount = parseInt(localStorage.getItem(storageKey) || '0');
+      // Save updated count
+      localStorage.setItem(storageKey, currentCount.toString());
 
-        // Increment count for unique visitor
-        currentCount += 1;
+      // Update display
+      visitorCountElement.textContent = currentCount.toLocaleString();
 
-        // Save updated count and timestamp
-        localStorage.setItem(storageKey, currentCount.toString());
-        localStorage.setItem(lastVisitKey, now.toString());
+      // Add animation effect
+      visitorCountElement.style.transition = 'all 0.3s ease';
+      visitorCountElement.style.transform = 'scale(1.2)';
+      visitorCountElement.style.color = '#2563eb';
 
-        // Update display
-        visitorCountElement.textContent = currentCount.toLocaleString();
-
-        // Add animation effect
-        visitorCountElement.style.transition = 'all 0.3s ease';
-        visitorCountElement.style.transform = 'scale(1.2)';
-        visitorCountElement.style.color = '#2563eb';
-
-        setTimeout(() => {
-          visitorCountElement.style.transform = 'scale(1)';
-          visitorCountElement.style.color = 'white';
-        }, 300);
-      } else {
-        // Show current count without incrementing
-        const currentCount = parseInt(localStorage.getItem(storageKey) || '0');
-        visitorCountElement.textContent = currentCount.toLocaleString();
-      }
+      setTimeout(() => {
+        visitorCountElement.style.transform = 'scale(1)';
+        visitorCountElement.style.color = 'white';
+      }, 300);
     }
 
-    // Initialize visitor counter when page loads
-    document.addEventListener('DOMContentLoaded', updateVisitorCount);
-
-    // Alternative: Use a simple counter that increments on each visit
-    // (This is less accurate but works without localStorage)
-    function simpleVisitCounter() {
-      const visitorCountElement = document.getElementById('visitorCount');
-      if (!visitorCountElement) return;
-
-      // Try to use localStorage first
-      try {
-        const storageKey = 'amazingroad_visit_count';
-        let count = parseInt(localStorage.getItem(storageKey) || '0');
-        count += 1;
-        localStorage.setItem(storageKey, count.toString());
-        visitorCountElement.textContent = count.toLocaleString();
-      } catch (e) {
-        // Fallback: show a static number if localStorage is not available
-        visitorCountElement.textContent = '1,234';
-      }
-    }
-
-    // Uncomment the line below if you prefer simple counter instead of unique visitor tracking
-    // document.addEventListener('DOMContentLoaded', simpleVisitCounter);
+    // Initialize visit counter when page loads
+    document.addEventListener('DOMContentLoaded', updateVisitCount);
   </script>
 </body>
 
